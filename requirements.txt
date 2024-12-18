@@ -2,3 +2,4 @@ speechrecognition
 wikipedia
 openai
 pywin32
+nltk
