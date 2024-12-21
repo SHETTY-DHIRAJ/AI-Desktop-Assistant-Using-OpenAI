@@ -2,5 +2,5 @@ speechrecognition
 wikipedia
 openai
 pywin32
-nltk
 python-dotenv
+requests
