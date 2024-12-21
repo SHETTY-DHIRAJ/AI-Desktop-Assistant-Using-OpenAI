@@ -1,12 +1,10 @@
 import speech_recognition as sr
 import win32com.client
 import time
-import nltk
-from nltk.corpus import stopwords
-import sys
 import subprocess
 import os
 import webbrowser
+import requests
 import datetime
 from openai import AzureOpenAI
 from dotenv import load_dotenv
@@ -20,6 +18,9 @@ api_version= os.getenv("azure_api_version") # Here you have to mention your azur
 azure_endpoint= os.getenv("azure_endpoint") # Here you have to mention your azure openai endpoint
 azure_deployment= os.getenv("azure_deployment_name") # Here you have to mention your azure openai deployment name
 
+# Here we are creating an instance of the Speech API's (SpVoice) object, enabling text-to-speech functionality.
+speaker= win32com.client.Dispatch("SAPI.SpVoice")
+
 # Creating the client
 client= AzureOpenAI(
     api_key= api_key,
@@ -29,7 +30,26 @@ client= AzureOpenAI(
 
 # Initialize the conversation history with a system message (e.g., setting assistant behavior)
 messages = [
-    {"role": "system", "content": "You are a helpful ai desktop assistant."}
+    # {"role": "system", "content": "You are a helpful ai desktop assistant."}
+
+    {
+        "role": "system", "content": """
+        
+        You are an AI desktop assistant designed to help the user with a variety of tasks on their machine. Your main role is to assist with tasks such as:
+
+        1. Interactive Conversations: You will interact with the user in a conversational manner, understanding and responding to questions, clarifications, and requests.
+
+        2. Task-Performed Messages: At times, tasks will be executed directly by the assistant's underlying code (e.g., opening a website or application, mentioning current time). These tasks might not need to be explicitly confirmed by the assistant but should be understood as performed actions.
+
+        3. Context Handling: Your responses should maintain the context of previous interactions, understanding that certain actions like opening a website or app are being managed by the code behind you. Always be aware of the actions performed automatically and refer to them when relevant to the user.
+        
+        4. System-Related Tasks and History Check: If the user requests system-related tasks that may require specific permissions or access (e.g., modifying system settings, installing software, Set a timer for 30 minutes), you should check the previous conversation history to see if similar actions were previously performed.
+	
+            4.1. If a similar task has been performed before and is relevant, you should provide the user with the relevant information.
+            
+            4.2. If the task has not been performed before or is not currently possible, you should inform the user that the task cannot be performed at the moment.
+        """
+    }
 ]
 
 # This function to trim message history to the last few messages
@@ -73,8 +93,47 @@ def az_openai(prompt):
     
     return assistant_reply
 
-# Here we are creating an instance of the Speech API's (SpVoice) object, enabling text-to-speech functionality.
-speaker= win32com.client.Dispatch("SAPI.SpVoice")
+# This function is use when there is a need to perform task specific azure openai operations without updating the chat history.
+def az_openai_tasks_pecific(prompt):
+
+    # Generate the assistant's response using the conversation history
+    response= client.chat.completions.create(
+        model= azure_deployment,
+        messages= [{"role": "user", "content": prompt}],
+        temperature= 0.7,
+        max_tokens= 256,
+        top_p= 0.9,
+        frequency_penalty= 0.2,
+        presence_penalty= 0.0
+    )
+
+    try:
+        # Get the assistant's response from the API result
+        assistant_reply = response.choices[0].message.content
+        
+    except Exception as e:
+        print("az_openai_tasks_pecific function encountered an error: "+ str(e))
+        assistant_reply= ""
+    
+    return assistant_reply
+
+# This function is used to send a GET request and check the response status code.
+def check_url(url):
+    url_flag= False
+    try:
+        response = requests.get(url, timeout=5)  # Set a timeout to avoid hanging
+        if response.status_code in (200, 403):
+            print(f"URL {url} is up and running!")
+            url_flag= True
+        else:
+            print(f"URL {url} returned status code {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        # This will catch most network-related exceptions
+        print(f"Network-related error occurred with {url}. Error: {e}")
+    except Exception as e:
+        # This will catch all other exceptions, including unexpected ones
+        print(f"An unexpected error occurred with {url}. Error: {e}")
+    return url_flag
 
 # This function is used to listen the users voice and then return the audio's text format with the respective flag if the audio is successfully converted then 1 else 0 if there is some exception.
 def takecommand():
@@ -115,25 +174,6 @@ def is_app_installed(app_name):
         print(f"Application '{app_name}' not found as an installed application in your machine. Opening it in a web browser.")
         return False
 
-# This function is used to remove the stopwords like "the", "and", "is", etc.) which do not contribute much in the meaning of the sentence.
-def remove_stopwords(input_string):
-
-    # downloading stopwords. This will be later used to remove the stopwords in the sentence.
-    nltk.download('stopwords')
-
-    # Get the set of stopwords
-    stop_words = set(stopwords.words('english'))
-
-    # Split the input string into words
-    words = input_string.split()
-    
-    # Remove stopwords
-    filtered_words = [word for word in words if word.lower() not in stop_words]
-    
-    # Join the filtered words back into a string
-    return " ".join(filtered_words)
-
-
 if __name__ == '__main__':
     print("---- The AI Desktop Assistance starts here ----")
     time.sleep(1) # By this halt time the very next line of code executes smoothly.
@@ -146,33 +186,80 @@ if __name__ == '__main__':
             # This is used to open any online websites.
             if "open" in speech_input.lower():
 
-                speech_input_without_stopwords= remove_stopwords(speech_input)
+                # Append the user message to the conversation history
+                messages.append({"role": "user", "content": speech_input})
 
-                # Here in below code the very next word after the "open" is identified. In our case it is considered to be site/website the user want to open.
-                app_site_name = next((speech_input_without_stopwords.split()[i+1] 
-                                for i, word in enumerate(speech_input_without_stopwords.split()) 
-                                if word.lower() == "open" 
-                                and i+1 < len(speech_input_without_stopwords.split())), None).lower()
+                # Below code identifies the app/website the user is requesting to open.
+                app_site_name= az_openai_tasks_pecific(f"""
+                                                  Given the input "{speech_input}", extract the **primary keyword** or **main term** mentioned in the sentence. If no meaningful keyword can be identified, return an empty string. If the keyword consists of multiple words, return the full phrase. Do not include any additional text or explanations, just return the **keyword** or an empty string.
+
+                                                    Input: "{speech_input}"
+
+                                                    Response:""")
+                                
+                if app_site_name:
+                    app_site_name= app_site_name.lower()
                 
-                if is_app_installed(app_site_name):
-                    speaker.Speak(f"Opening {app_site_name}")
-                    os.system(f"start {app_site_name}.exe")  # Windows command to open an app
+                    if is_app_installed(app_site_name):
+                        speaker.Speak(f"Opening {app_site_name}")
+                        os.system(f"start {app_site_name}.exe")  # Windows command to open an app
+
+                        # Append the assistant's reply to the conversation history
+                        messages.append({"role": "assistant", "content": f"The AI Desktop Assistant has opened {app_site_name} on users request"})
+
+                    else:
+                        browser_url= az_openai_tasks_pecific(f"""Given the input {app_site_name}, check if it corresponds to a valid website domain. Return the full URL (e.g., https://domain.com) if a valid domain exists for that keyword. If no valid URL exists, return an empty string. Do not include any explanations, just return the URL or an empty string.
+
+                                                                Input: "{app_site_name}"
+
+                                                                Response:""")
+                        
+                        print("browser_url: " + browser_url)
+                        
+                        # Checking if the azure openai returned a valid url and whether the url up and running.
+                        if browser_url and check_url(browser_url):
+                            
+                            speaker.Speak(f"Opening {app_site_name} in browser")
+                            webbrowser.open(browser_url) # This will open the site in webbrowser
+
+                            # Append the assistant's reply to the conversation history
+                            messages.append({"role": "assistant", "content": f"The AI Desktop Assistant has opened {browser_url} in browser on users request"})
+
+                        else:
+                            speaker.Speak(f"Sorry, Some error occured. Try again")
+
+                            # Append the assistant's reply to the conversation history
+                            messages.append({"role": "assistant", "content": f"Sorry, Some error occured. Try again"})
+                
                 else:
-                    speaker.Speak(f"Opening {app_site_name}")
-                    webbrowser.open(f"https://{app_site_name}.com") # This will open the site in webbrowser
+                    speaker.Speak(f"Sorry, Some error occured. Try again")
 
-            # This is used to get the current system time.
-            elif "what" in speech_input.lower() and "time" in speech_input.lower():
+                    # Append the assistant's reply to the conversation history
+                    messages.append({"role": "assistant", "content": f"Sorry, Some error occured. Try again"})
 
-                strfTime= datetime.datetime.now().strftime("%H:%M:%S")
-                speaker.Speak(f"The time is {strfTime}")
+
+            # This is used to handle time and date related query.
+            elif "time" in speech_input.lower() or "date" in speech_input.lower():
+
+                # Getting the currnt time
+                current_time= datetime.datetime.now().strftime("%H:%M:%S")
+
+                # Getting the current date
+                current_date = datetime.date.today().strftime("%d-%m-%Y")  # Day-Month-Year format
+
+                assistant_reply= az_openai(f"The user has asked '{speech_input}'. current time is {current_time} and today's date is {current_date} this information is fetched from the underlying code. You can utilize the current time and date mentioned if the user asked question is relevent. Or provide an appropriate response if the request is unrelated.")
+
+                if assistant_reply:
+                    speaker.Speak(assistant_reply)
+                else:
+                    speaker.Speak("Sorry, Some error occured in openai functionality. Try again")
             
             # This is used to reset the chat history saved.
             elif "reset chat" in speech_input.lower() or "reset history" in speech_input.lower() or "clear chat" in speech_input.lower():
                 messages.clear()
                 messages = [{"role": "system", "content": "You are a helpful assistant."}]
                 print("Message history has been reset.")
-                speaker.Speak("Chat history has been reset.")
+                speaker.Speak("Chat history has been reset. Is there anything else I can do for you.")
 
             # This is used to quit or exit the ai desktop assistant.
             elif "exit chat" in speech_input.lower() or "quit chat" in speech_input.lower():
