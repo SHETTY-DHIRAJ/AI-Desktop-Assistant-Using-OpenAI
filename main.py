@@ -190,12 +190,11 @@ if __name__ == '__main__':
                 messages.append({"role": "user", "content": speech_input})
 
                 # Below code identifies the app/website the user is requesting to open.
-                app_site_name= az_openai_tasks_pecific(f"""
-                                                  Given the input "{speech_input}", extract the **primary keyword** or **main term** mentioned in the sentence. If no meaningful keyword can be identified, return an empty string. If the keyword consists of multiple words, return the full phrase. Do not include any additional text or explanations, just return the **keyword** or an empty string.
+                app_site_name= az_openai_tasks_pecific(f"""Given the input "{speech_input}", extract the **primary keyword** or **main term** mentioned in the sentence. If no meaningful keyword can be identified, return an empty string. If the keyword consists of multiple words, return the full phrase. Do not include any additional text or explanations, just return the **keyword** or an empty string.
 
-                                                    Input: "{speech_input}"
+                                                            Input: "{speech_input}"
 
-                                                    Response:""")
+                                                            Response:""")
                                 
                 if app_site_name:
                     app_site_name= app_site_name.lower()
