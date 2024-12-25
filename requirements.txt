@@ -1,7 +1,7 @@
 speechrecognition
 wikipedia
 openai
-pywin32
+pyttsx3
 python-dotenv
 requests
 streamlit
