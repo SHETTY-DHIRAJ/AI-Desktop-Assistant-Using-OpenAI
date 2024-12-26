@@ -1,5 +1,5 @@
 import speech_recognition as sr
-import win32com.client
+import pyttsx3
 import time
 import subprocess
 import os
@@ -18,8 +18,14 @@ api_version= os.getenv("azure_api_version") # Here you have to mention your azur
 azure_endpoint= os.getenv("azure_endpoint") # Here you have to mention your azure openai endpoint
 azure_deployment= os.getenv("azure_deployment_name") # Here you have to mention your azure openai deployment name
 
-# Here we are creating an instance of the Speech API's (SpVoice) object, enabling text-to-speech functionality.
-speaker= win32com.client.Dispatch("SAPI.SpVoice")
+# Here we are creating an instance of the Speech API's object, enabling text-to-speech functionality.
+tts_engine = pyttsx3.init()
+tts_engine.setProperty("rate", 150)  # Adjust the speech rate
+
+# Function to speak text aloud
+def speaker(text):
+    tts_engine.say(text) # This will give the audio output.
+    tts_engine.runAndWait() # To retrieve all the items from the queue and process them.
 
 # Creating the client
 client= AzureOpenAI(
@@ -177,7 +183,7 @@ def is_app_installed(app_name):
 if __name__ == '__main__':
     print("---- The AI Desktop Assistance starts here ----")
     time.sleep(1) # By this halt time the very next line of code executes smoothly.
-    speaker.Speak("How can I help you") # This will give the audio output.
+    speaker("How can I help you") # This will give the audio output.
     while True:
         speech_input, speech_flag= takecommand()
 
@@ -200,7 +206,7 @@ if __name__ == '__main__':
                     app_site_name= app_site_name.lower()
                 
                     if is_app_installed(app_site_name):
-                        speaker.Speak(f"Opening {app_site_name}")
+                        speaker(f"Opening {app_site_name}")
                         os.system(f"start {app_site_name}.exe")  # Windows command to open an app
 
                         # Append the assistant's reply to the conversation history
@@ -218,20 +224,20 @@ if __name__ == '__main__':
                         # Checking if the azure openai returned a valid url and whether the url up and running.
                         if browser_url and check_url(browser_url):
                             
-                            speaker.Speak(f"Opening {app_site_name} in browser")
+                            speaker(f"Opening {app_site_name} in browser")
                             webbrowser.open(browser_url) # This will open the site in webbrowser
 
                             # Append the assistant's reply to the conversation history
                             messages.append({"role": "assistant", "content": f"The AI Desktop Assistant has opened {browser_url} in browser on users request"})
 
                         else:
-                            speaker.Speak(f"Sorry, Some error occured. Try again")
+                            speaker(f"Sorry, Some error occured. Try again")
 
                             # Append the assistant's reply to the conversation history
                             messages.append({"role": "assistant", "content": f"Sorry, Some error occured. Try again"})
                 
                 else:
-                    speaker.Speak(f"Sorry, Some error occured. Try again")
+                    speaker(f"Sorry, Some error occured. Try again")
 
                     # Append the assistant's reply to the conversation history
                     messages.append({"role": "assistant", "content": f"Sorry, Some error occured. Try again"})
@@ -249,20 +255,20 @@ if __name__ == '__main__':
                 assistant_reply= az_openai(f"The user has asked '{speech_input}'. current time is {current_time} and today's date is {current_date} this information is fetched from the underlying code. You can utilize the current time and date mentioned if the user asked question is relevent. Or provide an appropriate response if the request is unrelated.")
 
                 if assistant_reply:
-                    speaker.Speak(assistant_reply)
+                    speaker(assistant_reply)
                 else:
-                    speaker.Speak("Sorry, Some error occured in openai functionality. Try again")
+                    speaker("Sorry, Some error occured in openai functionality. Try again")
             
             # This is used to reset the chat history saved.
             elif "reset chat" in speech_input.lower() or "reset history" in speech_input.lower() or "clear chat" in speech_input.lower():
                 messages.clear()
                 messages = [{"role": "system", "content": "You are a helpful assistant."}]
                 print("Message history has been reset.")
-                speaker.Speak("Chat history has been reset. Is there anything else I can do for you.")
+                speaker("Chat history has been reset. Is there anything else I can do for you.")
 
             # This is used to quit or exit the ai desktop assistant.
             elif "exit chat" in speech_input.lower() or "quit chat" in speech_input.lower():
-                speaker.Speak(az_openai("Bye"))
+                speaker(az_openai("Bye"))
                 print("Exiting the AI Desktop Assistant")
                 exit()
 
@@ -270,10 +276,10 @@ if __name__ == '__main__':
             else:
                 assistant_reply= az_openai(speech_input[8:])
                 if assistant_reply:
-                    speaker.Speak(assistant_reply)
+                    speaker(assistant_reply)
                 else:
-                    speaker.Speak("Sorry, Some error occured in openai functionality. Try again")
+                    speaker("Sorry, Some error occured in openai functionality. Try again")
 
         else:
-            speaker.speak(speech_input)
+            speaker(speech_input)
             print(f"System message: {speech_input}")
