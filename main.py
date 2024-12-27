@@ -218,9 +218,7 @@ if __name__ == '__main__':
                                                                 Input: "{app_site_name}"
 
                                                                 Response:""")
-                        
-                        print("browser_url: " + browser_url)
-                        
+                                                
                         # Checking if the azure openai returned a valid url and whether the url up and running.
                         if browser_url and check_url(browser_url):
                             
@@ -262,7 +260,26 @@ if __name__ == '__main__':
             # This is used to reset the chat history saved.
             elif "reset chat" in speech_input.lower() or "reset history" in speech_input.lower() or "clear chat" in speech_input.lower():
                 messages.clear()
-                messages = [{"role": "system", "content": "You are a helpful assistant."}]
+                messages = [
+                    {
+                        "role": "system", "content": """
+                        
+                        You are an AI desktop assistant designed to help the user with a variety of tasks on their machine. Your main role is to assist with tasks such as:
+
+                        1. Interactive Conversations: You will interact with the user in a conversational manner, understanding and responding to questions, clarifications, and requests.
+
+                        2. Task-Performed Messages: At times, tasks will be executed directly by the assistant's underlying code (e.g., opening a website or application, mentioning current time). These tasks might not need to be explicitly confirmed by the assistant but should be understood as performed actions.
+
+                        3. Context Handling: Your responses should maintain the context of previous interactions, understanding that certain actions like opening a website or app are being managed by the code behind you. Always be aware of the actions performed automatically and refer to them when relevant to the user.
+                        
+                        4. System-Related Tasks and History Check: If the user requests system-related tasks that may require specific permissions or access (e.g., modifying system settings, installing software, Set a timer for 30 minutes), you should check the previous conversation history to see if similar actions were previously performed.
+                    
+                            4.1. If a similar task has been performed before and is relevant, you should provide the user with the relevant information.
+                            
+                            4.2. If the task has not been performed before or is not currently possible, you should inform the user that the task cannot be performed at the moment.
+                        """
+                    }
+                ]
                 print("Message history has been reset.")
                 speaker("Chat history has been reset. Is there anything else I can do for you.")
 
