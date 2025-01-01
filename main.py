@@ -291,7 +291,7 @@ if __name__ == '__main__':
 
             # By default if the user input is not identified as any of the above predefined tasks then the flow will invoke the azure openai and start the conversation.
             else:
-                assistant_reply= az_openai(speech_input[8:])
+                assistant_reply= az_openai(speech_input)
                 if assistant_reply:
                     speaker(assistant_reply)
                 else:
