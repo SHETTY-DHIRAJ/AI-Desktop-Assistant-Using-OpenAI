@@ -1,6 +1,95 @@
 # AI Desktop Assistant Using OpenAI
 
-This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** that allows users to interact with their computer through natural language and voice commands. The assistant is designed to facilitate seamless user interaction, perform task-specific actions, and provide contextually relevant responses. Key features include voice recognition, integration with OpenAI for dynamic conversations, and efficient management of chat history, enabling an intuitive and intelligent experience.
+This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** and **Streamlit** that allows users to interact with their computer through voice-based and text-based commands, providing a user-friendly experience for performing various tasks. A **Streamlit-based UI** enhances accessibility and usability, allowing users to interact through an intuitive web interface. The assistant is designed to facilitate seamless user interaction, perform task-specific actions, and provide contextually relevant responses. Key features include voice recognition, integration with OpenAI for dynamic conversations, and efficient management of chat history, enabling an intuitive and intelligent experience.
+
+> **Note**: This project has been further enhanced with additional features, including a **Streamlit application** for a graphical interface, enabling users to input text queries, view conversation history, and switch between text and voice interactions seamlessly. These updates aim to provide a more versatile and user-friendly experience.
+
+## Example Screenshots
+
+### 1. Streamlit Dashboard
+
+<p align="center">
+  <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Streamlit-Dashboard.png" alt="Streamlit Dashboard" width="800">
+</p>
+<p align="center"><em>An interactive dashboard for voice and text interactions</em></p>
+
+<p align="center">----</p>
+
+### 2. Text Input Interaction
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-TextInput-Question.png" alt="Chat-Conversation-TextInput-Question" width="400">
+      <p><em>TextInput Question</em></p>
+    </td>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-TextInput-Live-Status.png" alt="Chat-Conversation-TextInput-Live-Status" width="400">
+      <p><em>TextInput Live Status</em></p>
+    </td>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-TextInput-Response.png" alt="Chat-Conversation-TextInput-Response" width="400">
+      <p><em>TextInput Response</em></p>
+    </td>
+  </tr>
+</table>
+
+<p align="center">----</p>
+
+### 3. Chat History Based Conversation
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-History-Question.png" alt="Chat-Conversation-History-Question" width="480">
+      <p><em>Chat History Based Question</em></p>
+    </td>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-History-Response.png" alt="Chat-Conversation-History-Response" width="480">
+      <p><em>Chat History Based Response</em></p>
+    </td>
+  </tr>
+</table>
+
+<p align="center">----</p>
+
+### 4. Voice Input Interaction
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-VoiceInput-Listening.png" alt="Chat-Conversation-VoiceInput-Listening" width="400">
+      <p><em>VoiceInput Listening</em></p>
+    </td>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-VoiceInput-Live-Status.png" alt="Chat-Conversation-VoiceInput-Live-Status" width="400">
+      <p><em>VoiceInput Live Status</em></p>
+    </td>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-VoiceInput-Response.png" alt="Chat-Conversation-VoiceInput-Response" width="400">
+      <p><em>VoiceInput Response</em></p>
+    </td>
+  </tr>
+</table>
+
+<p align="center">----</p>
+
+### 5. Chat History Clear Button
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-History-Clear-ButtonClick.png" alt="Chat-Conversation-History-Clear-ButtonClick" width="480">
+      <p><em>Chat History Clear Button On Click</em></p>
+    </td>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-History-Clear-ButtonClick-Response.png" alt="Chat-Conversation-History-Clear-ButtonClick-Response" width="480">
+      <p><em>Chat History Clear Button On Click Response</em></p>
+    </td>
+  </tr>
+</table>
+
+---
 
 ## Key Features
 
@@ -27,13 +116,27 @@ This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** 
    - The assistant is designed with robust **error handling** capabilities, providing fallback responses for unrecognized commands or errors related to speech recognition and OpenAI interactions.
    - This ensures a smooth user experience even when issues arise, preventing the assistant from malfunctioning and maintaining reliability.
 
+## Streamlit App Features
+
+1. **Input Methods**:
+   - **Voice Commands**: Users can interact through voice for hands-free operation.
+   - **Text Commands**: A text-based interface allows precise control and input.
+
+2. **Dynamic Chat History**:
+   - View previous interactions in real time.
+   - Clear chat history with a single button click.
+
+3. **Realtime Conversation status**:
+   - View the realtime conversation status as the assistant proceeds.
+
 ## Project Structure
 
-| File/Directory      | Description                                                                 |
-|---------------------|-----------------------------------------------------------------------------|
-| `main.py`           | The core script containing the logic for the AI desktop assistant.         |
-| `requirements.txt`  | List of dependencies and libraries required for the project.               |
-| `.env`              | Environment file containing secrets such as API keys and endpoints.        |
+| File/Directory             | Description                                                                |
+|----------------------------|----------------------------------------------------------------------------|
+| `main.py`                  | The Core research-based script for the AI desktop assistant functionality. |
+| `streamlit_assistant.py`   | Streamlit-powered web application for user-friendly interactions.          |
+| `requirements.txt`         | List of dependencies and libraries required for the project.               |
+| `.env`                     | Environment file containing secrets such as API keys and endpoints.        |
 
 ---
 
@@ -59,13 +162,21 @@ This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** 
 
 ## How to Run
 
-1. **Start the Assistant**:
-   Run the `main.py` script:
-   ```bash
-   python main.py
+1. **Run the Streamlit Web App**:
+   - Start the Streamlit-based assistant:
+     ```bash
+     streamlit run streamlit_assistant.py
+     ```
+   - Open the provided URL (usually `http://localhost:8501`) in your browser to interact with the assistant.
 
-2. **Interact with the Assistant**:
-   - Speak commands such as:
+2. **Run the Research Version**:
+   - If you wish to use the original version without a UI:
+     ```bash
+     python main.py
+     ```
+
+3. **Interact with the Assistant**:
+   - Speak or type commands such as:
       - "Open (application name)" to open applications or websites.
       - "What is the time?" to get the current system time.
       - "Reset chat" or "Clear history" to clear the assistant's memory.
@@ -74,9 +185,10 @@ This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** 
 
 ## Future Enhancements
    - Add support for additional system utilities like file management and weather forecasting.
+   - Enhance UI to include user settings for customizing the assistant.
    - Improve natural language understanding for more complex commands.
    - Enhance error handling and conversational flexibility.
 
 ## Acknowledgements
    - This project utilizes various libraries, including Azure OpenAI, speech_recognition and SAPI Speech API.
-   - Special thanks to [Code with Harry](https://www.youtube.com/@CodeWithHarry) for his guidance. 
+   - Special thanks to [Code with Harry](https://www.youtube.com/@CodeWithHarry) for his guidance on `main.py` research.
