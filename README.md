@@ -8,16 +8,20 @@ This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** 
 
 ### 1. Streamlit Dashboard
 
-<p align="center">
-  <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Streamlit-Dashboard.png" alt="Streamlit Dashboard" width="800">
-</p>
-<p align="center"><em>An interactive dashboard for voice and text interactions</em></p>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Streamlit-Dashboard.png" alt="Streamlit Dashboard" width="480">
+      <p><em>An interactive dashboard for voice and text interactions</em></p>
+    </td>
+  </tr>
+</table>
 
 <p align="center">----</p>
 
 ### 2. Text Input Interaction
 
-<table>
+<table align="center">
   <tr>
     <td align="center">
       <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-TextInput-Question.png" alt="Chat-Conversation-TextInput-Question" width="400">
@@ -38,7 +42,7 @@ This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** 
 
 ### 3. Chat History Based Conversation
 
-<table>
+<table align="center">
   <tr>
     <td align="center">
       <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-History-Question.png" alt="Chat-Conversation-History-Question" width="480">
@@ -55,7 +59,7 @@ This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** 
 
 ### 4. Voice Input Interaction
 
-<table>
+<table align="center">
   <tr>
     <td align="center">
       <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-VoiceInput-Listening.png" alt="Chat-Conversation-VoiceInput-Listening" width="400">
@@ -76,7 +80,7 @@ This project implements an **AI Desktop Assistant** powered by **Azure OpenAI** 
 
 ### 5. Chat History Clear Button
 
-<table>
+<table align="center">
   <tr>
     <td align="center">
       <img src="https://github.com/SHETTY-DHIRAJ/AI-Desktop-Assistant-Using-OpenAI/blob/main/Dependent-Resources/Chat-Conversation-History-Clear-ButtonClick.png" alt="Chat-Conversation-History-Clear-ButtonClick" width="480">
